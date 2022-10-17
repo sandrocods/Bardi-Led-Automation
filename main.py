@@ -18,7 +18,11 @@ print(Fore.GREEN + """
 
 
 def menu(connector_bardi=None, sleep_condition=None):
-    os.system('cls')
+    if os.name == "nt":
+        os.system("cls")
+    else:
+        os.system("clear")
+
     print(Fore.GREEN + "[!] Connected to device: {}".format(connector_bardi.device_name))
 
     if sleep_condition:
