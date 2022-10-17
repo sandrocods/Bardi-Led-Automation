@@ -16,6 +16,9 @@ class BardiConnector:
         elif connection_type.lower() == "usb":
             self.device = u2.connect()  # connect to device
 
+        if self.device.info.get('screenOn') is False: # unlock screen
+            self.device.screen_on() # unlock screen
+
         self.device.app_stop("com.bardi.smart.home")  # stop app
         self.device.app_start("com.bardi.smart.home")  # start app
         self.timeout = timeout  # timeout for wait
