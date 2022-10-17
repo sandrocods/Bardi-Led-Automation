@@ -15,9 +15,11 @@ class BardiConnector:
             self.device = u2.connect(addr=address)
         elif connection_type.lower() == "usb":
             self.device = u2.connect()  # connect to device
+        elif connection_type.lower() == "ngrok":
+            self.device = u2.connect_adb_wifi(addr=address)
 
-        if self.device.info.get('screenOn') is False: # unlock screen
-            self.device.screen_on() # unlock screen
+        if self.device.info.get('screenOn') is False:  # unlock screen
+            self.device.screen_on()  # unlock screen
 
         self.device.app_stop("com.bardi.smart.home")  # stop app
         self.device.app_start("com.bardi.smart.home")  # start app
@@ -37,6 +39,7 @@ class BardiConnector:
             "75": (0.655, 0.717),
         }
         self.theme_data = {}
+        self.device_name = None
 
     def get_bardi_device(self):
 
@@ -57,6 +60,7 @@ class BardiConnector:
             }
 
     def connect_bardi_device(self, device_name):
+        self.device_name = device_name
         if self.device(text=device_name).wait(timeout=self.timeout):
             self.device(text=device_name).click()
             device_connection_status = True
@@ -91,6 +95,7 @@ class BardiConnector:
             }
 
     def change_state(self, state):
+        self.device.click(0.468, 0.949)
         if state.lower() == "on":
             self.device.xpath(
                 '//*[@resource-id="com.bardi.smart.home:id/ty_fragment_reactroot"]/android.widget.FrameLayout[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[8]/android.view.ViewGroup[1]/android.view.ViewGroup[1]').click()
@@ -136,10 +141,10 @@ class BardiConnector:
             self.device.click(*self.location_color[color])
 
     def get_theme(self):
+        self.device.click(0.468, 0.949)
         theme_datas = []
         self.device.xpath(
-            '//*[@resource-id="com.bardi.smart.home:id/ty_fragment_reactroot"]/android.widget.FrameLayout[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[3]/android.view.ViewGroup[3]/android.view.View[1]'
-        ).click()
+            '//*[@resource-id="com.bardi.smart.home:id/ty_fragment_reactroot"]/android.widget.FrameLayout[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[8]/android.view.ViewGroup[3]').click()
         time.sleep(0.5)
 
         for i in self.device.xpath(
@@ -153,6 +158,7 @@ class BardiConnector:
         self.theme_data = theme_datas
 
     def get_theme_by_music(self):
+        self.device.click(0.468, 0.949)
         theme_datas = []
         self.device.xpath(
             '//*[@resource-id="com.bardi.smart.home:id/ty_fragment_reactroot"]/android.widget.FrameLayout[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[8]/android.view.ViewGroup[4]/android.view.View[1]').click()
@@ -184,4 +190,20 @@ class BardiConnector:
                 return {
                     "status": True,
                     "message": "Theme changed to {}".format(theme_name)
+                }
+
+    def sleep_device(self, status=False):
+        if status:
+            if self.device.info.get('screenOn'):
+                self.device.screen_off()
+                return {
+                    "status": True,
+                    "message": "Device sleep"
+                }
+        else:
+            if not self.device.info.get('screenOn'):
+                self.device.screen_on()
+                return {
+                    "status": True,
+                    "message": "Device wake up"
                 }
