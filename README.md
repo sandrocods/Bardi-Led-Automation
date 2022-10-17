@@ -4,8 +4,12 @@
 Automation for BARDI Bluetooth Light Bulb 9W RGBWW. use ADB automation need to use android smartphone :D
 
 ## Result 
+Interaction ADB using Ngrok over network 4g
 
-https://user-images.githubusercontent.com/59155826/196045133-6918f7fb-30ea-4539-8260-ebe6d2fb4da1.mp4
+
+https://user-images.githubusercontent.com/59155826/196244079-4d229ad6-dbef-4e30-8f05-ab60fa32943c.mp4
+
+
 
 ## Feature
 
@@ -14,8 +18,9 @@ https://user-images.githubusercontent.com/59155826/196045133-6918f7fb-30ea-4539-
 | Change Color  | ✅ |
 | On / Off Device | ✅ |
 | Change Brightness | ✅ |
-| Connection via Wifi / USB | ✅ |
+| Connection via Wifi / USB / Ngrok | ✅ |
 | Change Theme | ✅ |
+| Termux / Linux / Windows Support | ✅ |
 
 ## Run Locally
 
@@ -44,8 +49,21 @@ Start the example
   python3 connection.py
 ```
 
+you can use console application to interaction with Bardi LED
+```bash
+  python3 main.py
+```
+Output :
+
+##### Connect and Select Devices
+![image](https://user-images.githubusercontent.com/59155826/196245024-2f34138a-9551-4f90-b4a7-39c5bcf986db.png)
+
+##### After Connected you can use menu
+![image](https://user-images.githubusercontent.com/59155826/196245254-eb34b6a4-26f4-4eb6-bc4f-3b08e1f455e4.png)
+
 
 ## Enable Connection ADB via Wifi
+ ✔ You must have adb program 
 
 - Connect usb cable to your phone
 - Open cmd
@@ -55,6 +73,20 @@ Start the example
 How to connect multiple android devices with ADB over wifi : 
 
 - [Tutorial Stackoverflow](https://stackoverflow.com/a/43973839)
+
+## How to use Ngrok
+ ✔ You must have adb program 
+
+- Connect usb cable to your phone
+- Open cmd
+- Type: adb tcpip 5555
+- Get your phone ip address
+
+- Install Ngrok and set token
+- run this command
+```bash
+   ./ngrok tcp <ip phone>:5555
+```
 
 ## API Reference
 
@@ -73,6 +105,13 @@ connector_bardi = BardiConnector(
     timeout=10.0,
     connection_type="usb"
 )
+
+# Via Ngrok ( Over Network ) 
+connector_bardi = BardiConnector(
+        timeout=10.0,
+        connection_type="ngrok",
+        address="6.tcp.xxxxxxx:5555"
+    )
 ```
 
 Output :
