@@ -1,1 +1,4 @@
 uiautomator2~=2.16.19
+inquirer~=2.10.0
+colorama~=0.4.5
+alive_progress
