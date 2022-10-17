@@ -52,16 +52,23 @@ def menu(connector_bardi=None, sleep_condition=None):
                               'Change Theme LED',
                               'Change Power Device',
                               'Change Brightness LED',
-                              'Exit'],
+                              'Exit'
+                          ],
                           ),
         ]
         answers_menu = inquirer.prompt(questions_menu)
         if answers_menu['menu'] == 'Change Color LED':
 
+            dict = connector_bardi.location_color
+            dict['Sepia'] = 'Sepia'
+            dict['White'] = 'White'
+            dict['Half White'] = 'Half White'
+
             questions_color = [
                 inquirer.List('color',
                               message="What color do you want to set?",
-                              choices=connector_bardi.location_color,
+                              choices=dict,
+                              carousel=True,
                               ),
             ]
             answers_color = inquirer.prompt(questions_color)
